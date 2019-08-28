@@ -924,10 +924,7 @@ int msgq_send(msgq_pt msid, unsigned char *message)
 		{
 			get_msgq_task_from_WQ(&temp_tid, &temp_prio,msid);
 			push_task_into_readyQ(temp_tid, temp_prio, current_pc[current_tid]);
-			for (int i = 0; i < MAX_SIZE_OF_MESSAGE;i++)
-			{
-				task_dyn_info[temp_tid].task_message[temp_tid].buf[i] = message[i];
-			}
+			strcpy(task_dyn_info[temp_tid].task_message[temp_tid].buf, message);
 			return 0;
 		}
 		else

@@ -6,8 +6,8 @@
 #define MAX_PRIORITY 5
 
 #define NUM_OF_SEMS 0
-#define NUM_OF_MSGQS 0
-#define NUM_OF_MUTEXS 2
+#define NUM_OF_MSGQS 1
+#define NUM_OF_MUTEXS 1
 
 
 #define Task1 1

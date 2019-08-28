@@ -17,12 +17,20 @@ void initialize() {
 
 
 
-	for (int i = 1; i < NUM_OF_TASKS + 1; i++)
-	{
-		task_static_info[i].max_act_cnt = i;
-		task_static_info[i].prio = i;
-		task_dyn_info[i].dyn_prio = task_static_info[i].prio;
-	}
+	
+	task_static_info[1].max_act_cnt = 1;
+	task_static_info[1].prio = 3;
+	task_dyn_info[1].dyn_prio = task_static_info[1].prio;
+
+ 	task_static_info[2].max_act_cnt = 1;
+        task_static_info[2].prio = 2;
+        task_dyn_info[2].dyn_prio = task_static_info[2].prio;
+
+        task_static_info[3].max_act_cnt = 1;
+        task_static_info[3].prio = 1;
+        task_dyn_info[3].dyn_prio = task_static_info[3].prio;
+	
+	
 
 
 
@@ -46,7 +54,7 @@ void initialize() {
 		sem_list[i].Front = 0;
 		sem_list[i].Rear = 0;
 		sem_list[i].counter = 0;
-	}
+	}*/
 
 	for (int i = 1; i < NUM_OF_MSGQS + 1; i++)
 	{
@@ -57,7 +65,7 @@ void initialize() {
 		msgq_list[i].counter = 0;
 
 		
-	}*/
+	}
 
 	
 
@@ -80,14 +88,14 @@ void initialize() {
 		//sem_list[1].semQ[i].tid = 0;
 
 
-		//msgq_list[1].msgqQ[i].tid = 0;
+		msgq_list[1].msgqQ[i].tid = 0;
 
 		mutex_list[1].mutex_timed_flag[i] = -1;
 		mutex_list[1].mutex_timed_info[i] = -1;
 		mutex_list[1].mutexQ[i].tid = 0;
-		mutex_list[2].mutex_timed_flag[i] = -1;
-		mutex_list[2].mutex_timed_info[i] = -1;
-		mutex_list[2].mutexQ[i].tid = 0;
+		//mutex_list[2].mutex_timed_flag[i] = -1;
+		//mutex_list[2].mutex_timed_info[i] = -1;
+		//mutex_list[2].mutexQ[i].tid = 0;
 
 	}
 

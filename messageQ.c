@@ -3,7 +3,7 @@
 #include "messageQ.h"
 #include <stdio.h>
 //#include "ubinos.h"
-
+#include <string.h>
 
 
 //extern Msgq msgq_list;
@@ -33,12 +33,12 @@ int push_message_into_MQ(msgq_pt msid, unsigned char* message)
 	}
 	else
 	{
-		for (int i = 0; i < MAX_SIZE_OF_MESSAGE; i++)
+		/*for (int i = 0; i < sizeof(message)/sizeof(unsigned char); i++)
 		{
 			msgq_list[msid].Message_Queue[msgq_list[msid].R].message[i] = message[i];
-		}
+		}*/
 
-
+		strcpy(msgq_list[msid].Message_Queue[msgq_list[msid].R].message, message);
 		msgq_list[msid].R = (msgq_list[msid].R + 1) % msgq_list[msid].maxcounter;
 
 		return 0;
@@ -55,10 +55,11 @@ int get_message_from_MQ(msgq_pt msid, unsigned char* message)
 	}
 	else
 	{
-		for (int i = 0; i < MAX_SIZE_OF_MESSAGE; i++)
+		/*for (int i = 0; i < sizeof(msgq_list[msid].Message_Queue[msgq_list[msid].R].message)/sizeof(char); i++)
 		{
 			 message[i] = msgq_list[msid].Message_Queue[msgq_list[msid].R].message[i];
-		}
+		}*/
+	  	strcpy(message,msgq_list[msid].Message_Queue[msgq_list[msid].R].message);	
 		//printf("mess is %s \n\n", message);
 		msgq_list[msid].F = (msgq_list[msid].F + 1) % msgq_list[msid].maxcounter;
 		return 0;
