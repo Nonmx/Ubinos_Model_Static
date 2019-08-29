@@ -34,7 +34,7 @@ void initialize() {
 
 
 
-	for (int i = 1; i < NUM_OF_MUTEXS + 1; i++)
+	/*for (int i = 1; i < NUM_OF_MUTEXS + 1; i++)
 	{
 		mutex_list[i].flag = 0;
 		mutex_list[i].Front = 0;
@@ -46,7 +46,7 @@ void initialize() {
 		mutex_list[i].timed_flag = -1;
 		mutex_list[i].inheri_prio = -1;
 
-	}
+	}*/
 
 	
 	/*for (int i = 1; i < NUM_OF_SEMS + 1; i++)
@@ -90,9 +90,9 @@ void initialize() {
 
 		msgq_list[1].msgqQ[i].tid = 0;
 
-		mutex_list[1].mutex_timed_flag[i] = -1;
-		mutex_list[1].mutex_timed_info[i] = -1;
-		mutex_list[1].mutexQ[i].tid = 0;
+		//mutex_list[1].mutex_timed_flag[i] = -1;
+		//mutex_list[1].mutex_timed_info[i] = -1;
+		//mutex_list[1].mutexQ[i].tid = 0;
 		//mutex_list[2].mutex_timed_flag[i] = -1;
 		//mutex_list[2].mutex_timed_info[i] = -1;
 		//mutex_list[2].mutexQ[i].tid = 0;

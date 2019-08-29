@@ -18,7 +18,7 @@ int MQ_empty(msgq_pt msid)
 
 int MQ_full(msgq_pt msid)
 {
-	if ((msgq_list[msid].R + 1) % msgq_list[msid].maxcounter == msgq_list[msid].F)
+	if ((msgq_list[msid].R + 1) % MAX_SIZE_OF_MSGQ == msgq_list[msid].F)
 		return 1;
 	else
 		return 0;
@@ -33,13 +33,16 @@ int push_message_into_MQ(msgq_pt msid, unsigned char* message)
 	}
 	else
 	{
-		/*for (int i = 0; i < sizeof(message)/sizeof(unsigned char); i++)
+		//printf("sizeof %d",sizeof(message)/sizeof(char));
+	/*	for (int i = 0; i < sizeof(message)/sizeof(unsigned char); i++)
 		{
+			printf("%d",i);
+			
 			msgq_list[msid].Message_Queue[msgq_list[msid].R].message[i] = message[i];
 		}*/
 
 		strcpy(msgq_list[msid].Message_Queue[msgq_list[msid].R].message, message);
-		msgq_list[msid].R = (msgq_list[msid].R + 1) % msgq_list[msid].maxcounter;
+		msgq_list[msid].R = (msgq_list[msid].R + 1) % MAX_SIZE_OF_MSGQ;
 
 		return 0;
 	}
@@ -59,9 +62,15 @@ int get_message_from_MQ(msgq_pt msid, unsigned char* message)
 		{
 			 message[i] = msgq_list[msid].Message_Queue[msgq_list[msid].R].message[i];
 		}*/
-	  	strcpy(message,msgq_list[msid].Message_Queue[msgq_list[msid].R].message);	
+	  	strcpy(message,msgq_list[msid].Message_Queue[msgq_list[msid].F].message);	
 		//printf("mess is %s \n\n", message);
-		msgq_list[msid].F = (msgq_list[msid].F + 1) % msgq_list[msid].maxcounter;
+		
+		for(int i = 0; i<MAX_SIZE_OF_MESSAGE;i++)
+		{
+			msgq_list[msid].Message_Queue[msgq_list[msid].F].message[i] = 0;
+		}
+		
+		msgq_list[msid].F = (msgq_list[msid].F + 1) % MAX_SIZE_OF_MSGQ;
 		return 0;
 	}
 }

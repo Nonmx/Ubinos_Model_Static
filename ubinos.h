@@ -28,7 +28,7 @@ author: yangsong
 #define TEST 23
 //ubinos?????????
 #define MAX_SIZE_OF_MESSAGE 25
-#define MAX_SIZE_OF_MSGQ 10
+#define MAX_SIZE_OF_MSGQ 20
 /* Task states */
 typedef enum state {
 	Suspended, Ready, Running, Blocked
