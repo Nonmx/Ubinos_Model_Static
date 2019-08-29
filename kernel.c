@@ -132,13 +132,16 @@ int task_sleep(unsigned int time)
 	if (task_state[current_tid] == Running)
 	{
 		api_name = API_task_sleep;
-
-		for (unsigned int i = 1; i < NUM_OF_MUTEXS+1; i++)
+		
+		if (MID > 0)
 		{
-			if (current_tid == mutex_list[i].owner)
-			{
-				task_dyn_info[current_tid].In_SleepQ = 1;
-			}
+			for (unsigned int i = 1; i <= MID; i++)
+				{
+					if (current_tid == mutex_list[i].owner)
+					{
+						task_dyn_info[current_tid].In_SleepQ = 1;
+					}
+				}
 		}
 
 		task_state[current_tid] = Blocked;
@@ -198,7 +201,7 @@ int mutex_lock(mutex_pt mid)
 
 	if (mutex_list[mid].flag == 0 && mutex_list[mid].owner == 0)//first time
 	{
-		for (int i = 1; i < NUM_OF_MUTEXS + 1; i++)//lock anthor mutex
+		for (unsigned int i = 1; i <=MID; i++)//lock anthor mutex
 		{
 			if (mutex_list[i].owner == current_tid)
 				task_dyn_info[current_tid].pri_change_counter++;
@@ -233,7 +236,7 @@ int mutex_lock(mutex_pt mid)
 
 			task_state[current_tid] = Blocked;
 
-			for (unsigned int i = 1; i < NUM_OF_MUTEXS+1; i++)
+			for (unsigned int i = 1; i <=MID; i++)
 			{
 				if (current_tid == mutex_list[i].owner)
 				{
@@ -332,7 +335,7 @@ int mutex_unlock(mutex_pt mid)
 			{
 				if (task_dyn_info[current_tid].pri_change_counter > 0)// unlock once time
 				{
-					for (int i = NUM_OF_MUTEXS; i > 0; i--)
+					for (int i = MID; i > 0; i--)
 					{
 						if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i-1 != 0)
 							PRIO = mutex_list[i].inheri_prio;
@@ -357,7 +360,7 @@ int mutex_unlock(mutex_pt mid)
 				{
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
-						for (int i = NUM_OF_MUTEXS; i > 0; i--)
+						for (int i = MID; i > 0; i--)
 						{
 							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 								PRIO = mutex_list[i].inheri_prio;
@@ -385,7 +388,7 @@ int mutex_unlock(mutex_pt mid)
 
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
-						for (int i = NUM_OF_MUTEXS; i > 0; i--)
+						for (int i = MID; i > 0; i--)
 						{
 							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 								PRIO = mutex_list[i].inheri_prio;
@@ -412,7 +415,7 @@ int mutex_unlock(mutex_pt mid)
 
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
-						for (int i = NUM_OF_MUTEXS; i > 0; i--)
+						for (int i = MID; i > 0; i--)
 						{
 							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 								PRIO = mutex_list[i].inheri_prio;
@@ -440,7 +443,7 @@ int mutex_unlock(mutex_pt mid)
 				{
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
-						for (int i = NUM_OF_MUTEXS; i > 0; i--)
+						for (int i = MID; i > 0; i--)
 						{
 							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 								PRIO = mutex_list[i].inheri_prio;
@@ -467,7 +470,7 @@ int mutex_unlock(mutex_pt mid)
 				{
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
-						for (int i = NUM_OF_MUTEXS; i > 0; i--)
+						for (int i = MID; i > 0; i--)
 						{
 							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 								PRIO = mutex_list[i].inheri_prio;
@@ -557,7 +560,7 @@ void mutex_timer()
 	unsigned char temp_prio;
 	unsigned char PRIO = 0;
 
-		for (unsigned int j = 1; j < NUM_OF_MUTEXS+1; j++) //mutex ID starting from 1
+		for (unsigned int j = 1; j <= MID; j++) //mutex ID starting from 1
 		{
 			for (int i = 1; i < NUM_OF_TASKS+1; i++) //Tid starting form 1
 			{
@@ -610,7 +613,7 @@ void mutex_timer()
 									
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
-										for (int i = NUM_OF_MUTEXS; i > 0; i--)
+										for (int i = MID; i > 0; i--)
 										{
 											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 												PRIO = mutex_list[i].inheri_prio;
@@ -638,7 +641,7 @@ void mutex_timer()
 								{
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
-										for (int i = NUM_OF_MUTEXS; i > 0; i--)
+										for (int i = MID; i > 0; i--)
 										{
 											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 												PRIO = mutex_list[i].inheri_prio;
@@ -655,7 +658,7 @@ void mutex_timer()
 									else {
 										if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 										{
-											for (int i = NUM_OF_MUTEXS; i > 0; i--)
+											for (int i = MID; i > 0; i--)
 											{
 												if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 													PRIO = mutex_list[i].inheri_prio;
@@ -682,7 +685,7 @@ void mutex_timer()
 								{
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
-										for (int i = NUM_OF_MUTEXS; i > 0; i--)
+										for (int i = MID; i > 0; i--)
 										{
 											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 												PRIO = mutex_list[i].inheri_prio;
@@ -708,7 +711,7 @@ void mutex_timer()
 								{
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
-										for (int i = NUM_OF_MUTEXS; i > 0; i--)
+										for (int i = MID; i > 0; i--)
 										{
 											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
 												PRIO = mutex_list[i].inheri_prio;
@@ -817,7 +820,7 @@ int sem_take(sem_pt sid)
 	{
 		api_name = API_sem_take;
 
-		for (unsigned int i = 1; i < NUM_OF_MUTEXS+1; i++)
+		for (unsigned int i = 1; i <=MID; i++)
 		{
 			if (current_tid == mutex_list[i].owner)
 			{
@@ -924,10 +927,6 @@ int msgq_send(msgq_pt msid, unsigned char *message)
 		{
 			get_msgq_task_from_WQ(&temp_tid, &temp_prio,msid);
 			push_task_into_readyQ(temp_tid, temp_prio, current_pc[current_tid]);
-		/*for (int i = 0; i < sizeof(message)/sizeof(unsigned char); i++)
-		{
-			msgq_list[msid].Message_Queue[msgq_list[msid].R].message[i] = message[i];
-		}*/
 			strcpy(task_dyn_info[temp_tid].task_message[temp_tid].buf, message);
 			return 0;
 		}
@@ -954,7 +953,7 @@ int msgq_receive(msgq_pt msid,unsigned char* message)
 	else
 	{
 		api_name = API_msgq_receive;
-		for (unsigned int i = 1; i < NUM_OF_MUTEXS+1; i++)
+		for (unsigned int i = 1; i <=MID ; i++)
 		{
 			if (current_tid == mutex_list[i].owner)
 			{
