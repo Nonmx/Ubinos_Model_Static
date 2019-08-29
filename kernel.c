@@ -325,19 +325,37 @@ int mutex_unlock(mutex_pt mid)
 		{
 			if (current_tid != mutex_list[mid].owner && task_state[mutex_list[mid].owner] == Ready)
 			{
-				loc = find_task_readyQ(mutex_list[mid].owner, task_dyn_info[mutex_list[mid].owner].dyn_prio);
-				get_task_from_readyQ_position(&temp_tid, &temp_prio, mid, mutex_list, loc);
-				assert(temp_tid == mutex_list[mid].owner);
-				task_dyn_info[temp_tid].dyn_prio = task_static_info[mutex_list[mid].owner].prio;
-				push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid]);
+				if (task_dyn_info[current_tid].pri_change_counter > 0)// unlock once time
+				{
+					mutex_list[mid].inheri_prio = 0;
+					for (int i = MID; i > 0; i--)
+					{
+						if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
+							PRIO = mutex_list[i].inheri_prio;
+					}
+					loc = find_task_readyQ(mutex_list[mid].owner, task_dyn_info[mutex_list[mid].owner].dyn_prio);
+					get_task_from_readyQ_position(&temp_tid, &temp_prio, mid, mutex_list, loc);
+					assert(temp_tid == mutex_list[mid].owner);
+					task_dyn_info[temp_tid].dyn_prio = PRIO;
+					push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid]);
+				}
+				else
+				{
+					loc = find_task_readyQ(mutex_list[mid].owner, task_dyn_info[mutex_list[mid].owner].dyn_prio);
+					get_task_from_readyQ_position(&temp_tid, &temp_prio, mid, mutex_list, loc);
+					assert(temp_tid == mutex_list[mid].owner);
+					task_dyn_info[temp_tid].dyn_prio = task_static_info[temp_tid].prio;
+					push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid]);
+				}
 			}
 			else if (current_tid == mutex_list[mid].owner)
 			{
 				if (task_dyn_info[current_tid].pri_change_counter > 0)// unlock once time
 				{
+					mutex_list[mid].inheri_prio = 0;
 					for (int i = MID; i > 0; i--)
 					{
-						if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i-1 != 0)
+						if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 							PRIO = mutex_list[i].inheri_prio;
 					}
 					mutex_list[mid].inheri_prio = -1;
@@ -360,9 +378,10 @@ int mutex_unlock(mutex_pt mid)
 				{
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
+						mutex_list[mid].inheri_prio = 0;
 						for (int i = MID; i > 0; i--)
 						{
-							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 								PRIO = mutex_list[i].inheri_prio;
 						}
 						mutex_list[mid].inheri_prio = -1;
@@ -388,9 +407,10 @@ int mutex_unlock(mutex_pt mid)
 
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
+						mutex_list[mid].inheri_prio = 0;
 						for (int i = MID; i > 0; i--)
 						{
-							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 								PRIO = mutex_list[i].inheri_prio;
 						}
 						mutex_list[mid].inheri_prio = -1;
@@ -415,9 +435,10 @@ int mutex_unlock(mutex_pt mid)
 
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
+						mutex_list[mid].inheri_prio = 0;
 						for (int i = MID; i > 0; i--)
 						{
-							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 								PRIO = mutex_list[i].inheri_prio;
 						}
 						mutex_list[mid].inheri_prio = -1;
@@ -443,9 +464,10 @@ int mutex_unlock(mutex_pt mid)
 				{
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
+						mutex_list[mid].inheri_prio = 0;
 						for (int i = MID; i > 0; i--)
 						{
-							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 								PRIO = mutex_list[i].inheri_prio;
 						}
 						mutex_list[mid].inheri_prio = -1;
@@ -470,9 +492,10 @@ int mutex_unlock(mutex_pt mid)
 				{
 					if (task_dyn_info[mutex_list[mid].owner].pri_change_counter > 0)// unlock once time
 					{
+						mutex_list[mid].inheri_prio = 0;
 						for (int i = MID; i > 0; i--)
 						{
-							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+							if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 								PRIO = mutex_list[i].inheri_prio;
 						}
 						mutex_list[mid].inheri_prio = -1;
@@ -589,19 +612,49 @@ void mutex_timer()
 						{
 							if (current_tid != mutex_list[j].owner && task_state[mutex_list[j].owner] == Ready)
 							{
-								loc = find_task_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio);
-								get_task_from_readyQ_position(&temp_tid, &temp_prio, j, mutex_list, loc);
-								assert(temp_tid == mutex_list[j].owner);
-								task_dyn_info[temp_tid].dyn_prio = task_static_info[mutex_list[j].owner].prio;
-								push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid]);
+								if (task_dyn_info[current_tid].pri_change_counter > 0)// unlock once time
+								{
+									mutex_list[j].inheri_prio = 0;
+									for (int i = MID; i > 0; i--)
+									{
+										if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
+											PRIO = mutex_list[i].inheri_prio;
+									}
+									loc = find_task_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio);
+									get_task_from_readyQ_position(&temp_tid, &temp_prio, j, mutex_list, loc);
+									assert(temp_tid == mutex_list[j].owner);
+									task_dyn_info[temp_tid].dyn_prio = PRIO;
+									push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid]);
+								}
+								else
+								{
+									loc = find_task_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio);
+									get_task_from_readyQ_position(&temp_tid, &temp_prio, j, mutex_list, loc);
+									assert(temp_tid == mutex_list[j].owner);
+									task_dyn_info[temp_tid].dyn_prio = task_static_info[mutex_list[j].owner].prio;
+									push_task_into_readyQ(temp_tid, task_dyn_info[temp_tid].dyn_prio, current_pc[temp_tid]);
+								}
 							}
 							else if (current_tid == mutex_list[j].owner)
 							{
-								if (task_dyn_info[current_tid].In_ReadyQ > 0)
+								if (task_dyn_info[current_tid].pri_change_counter > 0)// unlock once time
 								{
-									task_dyn_info[current_tid].In_ReadyQ --;
+									mutex_list[j].inheri_prio = 0;
+									for (int i = MID; i > 0; i--)
+									{
+										if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
+											PRIO = mutex_list[i].inheri_prio;
+									}
+									mutex_list[j].inheri_prio = -1;
 									mutex_list[j].prio_inheri_flag--;
+									task_dyn_info[current_tid].pri_change_counter--;
+									task_dyn_info[current_tid].dyn_prio = PRIO;
+									push_task_into_readyQ(current_tid, task_dyn_info[current_tid].dyn_prio, current_pc[current_tid]);
 
+								}
+								else
+								{
+									mutex_list[j].prio_inheri_flag--;
 									task_dyn_info[mutex_list[j].owner].dyn_prio = task_static_info[mutex_list[j].owner].prio;
 									push_task_into_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio, current_pc[mutex_list[j].owner]);
 								}
@@ -613,9 +666,10 @@ void mutex_timer()
 									
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
+										mutex_list[j].inheri_prio = 0;
 										for (int i = MID; i > 0; i--)
 										{
-											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 												PRIO = mutex_list[i].inheri_prio;
 										}
 										mutex_list[j].inheri_prio = -1;
@@ -641,9 +695,10 @@ void mutex_timer()
 								{
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
+										mutex_list[j].inheri_prio = 0;
 										for (int i = MID; i > 0; i--)
 										{
-											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 												PRIO = mutex_list[i].inheri_prio;
 										}
 										mutex_list[j].inheri_prio = -1;
@@ -658,9 +713,10 @@ void mutex_timer()
 									else {
 										if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 										{
+											mutex_list[j].inheri_prio = 0;
 											for (int i = MID; i > 0; i--)
 											{
-												if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+												if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 													PRIO = mutex_list[i].inheri_prio;
 											}
 											mutex_list[j].inheri_prio = -1;
@@ -685,9 +741,10 @@ void mutex_timer()
 								{
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
+										mutex_list[j].inheri_prio = 0;
 										for (int i = MID; i > 0; i--)
 										{
-											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 												PRIO = mutex_list[i].inheri_prio;
 										}
 										mutex_list[j].inheri_prio = -1;
@@ -711,9 +768,10 @@ void mutex_timer()
 								{
 									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
 									{
+										mutex_list[j].inheri_prio = 0;
 										for (int i = MID; i > 0; i--)
 										{
-											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio && i - 1 != 0)
+											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
 												PRIO = mutex_list[i].inheri_prio;
 										}
 										mutex_list[j].inheri_prio = -1;
@@ -731,6 +789,32 @@ void mutex_timer()
 										task_dyn_info[mutex_list[j].owner].dyn_prio = task_static_info[mutex_list[j].owner].prio;
 										loc = find_task_mutexQ(mutex_list[j].owner, mutex_list, task_dyn_info[mutex_list[j].owner].Mutex_Id);
 										mutex_prio_change(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio, task_dyn_info[mutex_list[j].owner].Mutex_Id, loc);
+									}
+								}
+								else
+								{
+									if (task_dyn_info[mutex_list[j].owner].pri_change_counter > 0)// unlock once time
+									{
+										mutex_list[j].inheri_prio = 0;
+										for (int i = MID; i > 0; i--)
+										{
+											if (mutex_list[i].inheri_prio > mutex_list[i - 1].inheri_prio)
+												PRIO = mutex_list[i].inheri_prio;
+										}
+										mutex_list[j].inheri_prio = -1;
+										task_dyn_info[mutex_list[j].owner].pri_change_counter--;
+										mutex_list[j].prio_inheri_flag--;
+										task_dyn_info[mutex_list[j].owner].dyn_prio = PRIO;
+										loc = find_task_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio);
+										push_task_into_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio, current_pc[mutex_list[j].owner]);
+
+									}
+									else {
+
+										mutex_list[j].prio_inheri_flag--;
+										loc = find_task_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio);
+										task_dyn_info[mutex_list[j].owner].dyn_prio = task_static_info[mutex_list[j].owner].prio;
+										push_task_into_readyQ(mutex_list[j].owner, task_dyn_info[mutex_list[j].owner].dyn_prio, current_pc[mutex_list[j].owner]);
 									}
 								}
 							}
