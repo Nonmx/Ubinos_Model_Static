@@ -7,7 +7,7 @@
 
 #define NUM_OF_SEMS 1
 #define NUM_OF_MSGQS 0
-#define NUM_OF_MUTEXS 0
+#define NUM_OF_MUTEXS 1
 
 
 #define Task1 1

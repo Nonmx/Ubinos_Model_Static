@@ -582,12 +582,13 @@ void mutex_timer()
 	unsigned char temp_tid;
 	unsigned char temp_prio;
 	unsigned char PRIO = 0;
-
+	if(MID > 0)
+	{
 		for (unsigned int j = 1; j <= MID; j++) //mutex ID starting from 1
 		{
 			for (int i = 1; i < NUM_OF_TASKS+1; i++) //Tid starting form 1
 			{
-				if (mutex_list[j].mutex_timed_flag[i] == 0)//If the lock fails, the associated mutex id is found and the timer starts
+				if (mutex_list[j].mutex_timed_flag[i] == 0)//If the lock fails
 				{
 					if (task_state[mutex_list[j].mutex_timed_info[i]] == Ready)
 					{
@@ -604,13 +605,11 @@ void mutex_timer()
 
 						mutex_list[j].mutex_timed_info[i] = -1;
 						mutex_list[j].mutex_timed_flag[i] = -1;
-						loc = find_task_mutexQ(i,mutex_list,j);
-						get_mutex_task_from_WQ_position(&temp_tid,&temp_prio,j,loc);
-						push_task_into_readyQ(temp_tid, temp_prio, current_pc[temp_tid]);
-
+						
 						if (mutex_list[j].prio_inheri_flag > 0)
 						{
-							if (current_tid != mutex_list[j].owner && task_state[mutex_list[j].owner] == Ready)
+						
+							if(current_tid != mutex_list[j].owner && task_state[mutex_list[j].owner] == Ready)
 							{
 								if (task_dyn_info[current_tid].pri_change_counter > 0)// unlock once time
 								{
@@ -823,7 +822,7 @@ void mutex_timer()
 				}
 			}
 		}
-	
+	}
 }
 
 
@@ -922,7 +921,7 @@ int sem_take(sem_pt sid)
 void sem_timer()
 {
 	
-	
+	if(SID >= 1){	
 		for (unsigned int j = 1; j <= SID; j++) //sem ID starting from 1
 		{
 
@@ -958,7 +957,7 @@ void sem_timer()
 
 		}
 	
-
+	}
 	//return ret_val > 0 ? 0 : 2;
 }
 
