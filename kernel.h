@@ -30,7 +30,7 @@ int task_sleep(unsigned int);
 
 //part of mutex
 
-void mutex_create(mutex_pt*);
+int mutex_create(mutex_pt*);
 int mutex_delete(mutex_pt*);
 int mutex_lock(mutex_pt);
 int mutex_unlock(mutex_pt);
@@ -38,14 +38,14 @@ int mutex_islocked(mutex_pt);
 int mutex_lock_timed(mutex_pt,unsigned int);
 
 //part of semaphore
-void sem_create(sem_pt*);
+int sem_create(sem_pt*);
 int sem_delete(sem_pt*);
 int sem_take(sem_pt);
 int sem_give(sem_pt);
 int sem_take_timed(sem_pt, int);
 
 //part of messahe Q
-void msgq_create(msgq_pt*, int,int);
+int msgq_create(msgq_pt*, int,int);
 int msgq_receive(msgq_pt, unsigned char*);
 int msgq_send(msgq_pt, unsigned char*);
 int msgq_delete(msgq_pt*);

@@ -182,11 +182,12 @@ void sleep_timer()//Wake up the task
 
 
 
-void mutex_create(mutex_pt* mutex)
+int mutex_create(mutex_pt* mutex)
 {
 
 	MID++;
 	*mutex = MID;
+	return 0 ;
 
 }
 
@@ -847,10 +848,11 @@ int mutex_lock_timed(mutex_pt mid, unsigned int time)
 
 
 
-void sem_create(sem_pt* sid)
+int sem_create(sem_pt* sid)
 {
 	SID++;
 	*sid = SID;
+	return 0;
 }
 
 
@@ -990,10 +992,11 @@ void multi_time_checker()
 
 
 
-void msgq_create(msgq_pt* msid,int msgsize,int maxcount)
+int msgq_create(msgq_pt* msid,int msgsize,int maxcount)
 {
 	MSID++;
 	*msid = MSID;
+	return 0;
 	
 }
 
